@@ -1,0 +1,21 @@
+Define a class named Student.
+Include private members for id, name, age, and a static variable sequence.
+Implement a constructor that initializes the id, name, and age based on parameters and increments the sequence.
+Create member functions to retrieve name and age.
+Implement a member function to print student details.
+
+Define a class named Grade.
+Include private members for values and subjects.
+Implement a constructor to initialize these members based on parameters.
+Create a member function to print the grade and subject.
+
+Define an enumeration named Semester with values sem1 and sem2.
+
+Define a class named GradeBook.
+Include private members for an array of Grade pointers, gradesAssigned, maxGrades, year, and semester.
+Implement a constructor to initialize these members based on parameters.
+Implement a destructor for proper memory cleanup.
+Create member functions to add grades and print grades.
+
+Inside the main function, create instances of Student, Grade, and GradeBook.
+Demonstrate the functionality by adding grades to the GradeBook and printing them.
