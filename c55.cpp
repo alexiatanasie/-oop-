@@ -1,4 +1,9 @@
-//
+//this code shows 
+
+//the program works and also it works with the commented lines
+//the ones commented appear on debug console, but there is an debug error, so yeah...
+//tried to fix with g++,but it doesn't work, so i will fix it in 2-3 yrs, maybe...or when i will like/love a lot c++ :))
+
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <string>
