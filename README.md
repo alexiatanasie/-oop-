@@ -1,2 +1,3 @@
-# -c-
-exercise and post codes in c++
+# -cpp-
+C++/C codes and algos
+~oop~
