@@ -1,3 +1,3 @@
 # -cpp-
-C++/C codes and algos
+C++ codes and algos
 ~oop~
