@@ -24,11 +24,6 @@ public:
 		age = 0;
 		speciality = new char[strlen("valoare default") + 1];
 		strcpy_s(this->speciality, strlen("valoare default") + 1, "valoare default");
-
-		// nu poti sa ii dai valoarea lui speciality = nullptr de la inceput. 
-		//atunci cand o sa vrei sa afisezi un obiect care apeleaza default constructorul, gen d1,
-		//nu o sa aiba ce sa afiseze daca speciality = nullptr. nullptr nu este o variabila cum e stringul=" " sau int
-		//e gen mai mult o adresa nula gen goala si nu are ce sa afiseze in cazul asta 
 		nbShifts = 0;
 		nbDoctors++;
 
@@ -178,10 +173,6 @@ int main()
 	cout << d3.getName() << " " << d3.getAge() << " " << d3.getSpeciality() << " " << d3.getNbshifts() << endl;
 	cout << d4.getName() << " " << d4.getAge() << " " << d4.getSpeciality() << " " << d4.getNbshifts() << endl << endl << endl;
 
-
-	//d1 este un obiect care apeleaza default constructorul . 
-	//default constructorul nu initializeaza corect variabila speciality pentru ca ii da valoarea de nullptr , 
-	//ceea ce inseamna ca niciodata nu vei putea sa afisezi un obiect care apeleaza default constructorul, gen d1
 	cout << "nume neinitializat este: " << d1.getName() << endl << "varsta neinitializata este: " << d1.getAge() << endl << "specialitatea neinitializata este : " << d1.getSpeciality() << endl << "numarul de shifts neinitializat: " << d1.getNbshifts() << endl;
 
 	d1 = d3;
