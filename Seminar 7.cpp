@@ -42,7 +42,7 @@ public:
         pagesPerChapter = nullptr;
         books++;
     }
-    Book(string ISBN,string title, string author, int totalPages, int chapters, int* pahesPerChapter) :ISBN(ISBN) {
+    Book(string ISBN,string title, string author, int totalPages, int chapters, int* pagesPerChapter) :ISBN(ISBN) {
         this->title = title;
         this->author = author;
         this->totalPages = totalPages;
@@ -103,7 +103,7 @@ public:
     int getTotalPages() {
         return this->totalPages;
     }
-    int* getPacgedPerChapter() {
+    int* getPagesPerChapter() {
         int* copy;
         if (pagesPerChapter != nullptr) {
             copy = new int[this->chapters];
@@ -183,9 +183,9 @@ int main()
    /* Book b1;
     Book b2("12345", "After", "Anna Todd", 567, 40, c);
     cout << b1.getISBN() << b1.getTitle() << b1.getAuthor() << " " << b1.getTotalPages() << " " <<
-        b1.getChapters() << " " << b1.getPacgedPerChapter()<<endl;
+        b1.getChapters() << " " << b1.getPagesPerChapter()<<endl;
     cout << b2.getISBN() << b2.getTitle() << b2.getAuthor() << " " << b2.getTotalPages() << " " <<
-        b2.getChapters() << " " << b2.getPacgedPerChapter() << endl;*/
+        b2.getChapters() << " " << b2.getPagesPerChapter() << endl;*/
     Book bb;
     bb.showBook();
     Book b1("12345", "After", "Anna Todd", 567, 40, c);
