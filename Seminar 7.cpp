@@ -150,6 +150,7 @@ public:
         }
     }
     Book& operator=(const Book& b) {
+                if(this!=&a){
         this->title = b.title;
         this->author = b.author;
         this->totalPages = b.totalPages;
@@ -164,6 +165,7 @@ public:
         else {
             this->pagesPerChapter = nullptr;
         }
+     }
         return *this;
     }
     void showBook() {
