@@ -105,6 +105,25 @@ ostream& operator<<(ostream& out, Appliance a) {
 	out << "a new price:" << a.price << '\n';
 	return out;
 }
+//inheritance
+class WashingMachine :public Appliance {
+private:
+	int capacity;
+	int nrOfRotations;
+	bool hasDryer;
+public:
+	WashingMachine() : Appliance() {
+		this->capacity = 0;
+		this->nrOfRotations = 0;
+		this->hasDryer = 0;
+	}
+	WashingMachine(string ID, string name, string man, float price, int mis, float* ppm, typeOfAppliance at, int capacity
+		, int nbRotations, int hasDryer) :Appliance(ID, name, man, price, mis, ppm, at) {
+		this->capacity = capacity;
+		this->nrOfRotations = nbRotations;
+		this->hasDryer = hasDryer;
+	}
+};
 int main() {
 
 	float p1[]{ 120,110,200,170 }, p2[]{ 1000,1250,1110 };
@@ -120,6 +139,9 @@ int main() {
 
 	cin >> a1;
 	cout << a1;
+
+	WashingMachine wm1("1234ff", "Washing", "Samsung",330, 4, p1, Kitchen, 9, 1400, true);
+	
 
 	return 0;
 
