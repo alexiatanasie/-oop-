@@ -1,0 +1,704 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include<string>
+using namespace std;
+
+enum {
+    A,
+    B,
+};
+class Magazin {
+private:
+
+    string denumireMagazin;
+    int nrAngajati;
+    float suprafataMagazinMP;
+    bool esteNonstop;
+    const int CUI;
+    static int clasaCAENPrincipala;
+
+    char* numeProprietar;
+    int nrProduse;
+    float* preturiProduse;
+    string* denumiriProduse;
+
+public:
+
+    //ctr without param
+    Magazin() :CUI(10) {
+        this->denumireMagazin = "Anonima";
+        this->nrAngajati = 0;
+        this->suprafataMagazinMP = 0;
+        this->esteNonstop = 1;
+
+        //pt char*
+        this->numeProprietar = nullptr;
+        this->nrProduse = 0;
+        this->preturiProduse = nullptr; //NULL inseamna ca am 0 elemente in vector
+        this->denumiriProduse = nullptr;
+    }
+    //ctr cu parametrii 
+    Magazin(string denumireMagazin, int nrAngajati, float suprafataMagazinMP, bool esteNonstop, const int CUI, const char* numeProprietar, int nrProduse, float* preturiProduse, string* denumiriProduse) :CUI(CUI) {
+        this->denumireMagazin = denumireMagazin;
+        this->nrAngajati = nrAngajati;
+        this->suprafataMagazinMP = suprafataMagazinMP;
+        this->esteNonstop = esteNonstop;
+
+        //ALOCARE DE MEMORIE
+        this->numeProprietar = new char[strlen(numeProprietar) + 1];
+        //INITIALIZARE
+        strcpy(this->numeProprietar, numeProprietar);
+
+        this->nrProduse = nrProduse;
+        //ALOCARE DE MEMORIE
+
+        this->preturiProduse = new float[this->nrProduse];
+        this->denumiriProduse = new string[this->nrProduse];
+
+        //INITIALIZARE
+        for (int i = 0; i < this->nrProduse; i++) {
+            this->preturiProduse[i] = preturiProduse[i];
+            this->denumiriProduse[i] = denumiriProduse[i];
+        }
+    }
+    //getters and setters
+    //getters
+    string getDenumireMagazin()
+    {
+        return this->denumireMagazin;
+    }
+
+    int getNrAngajati()
+    {
+        return this->nrAngajati;
+    }
+
+    float getSuprafataMagazinMP()
+    {
+        return this->suprafataMagazinMP;
+    }
+
+    bool getesteNonstop()
+    {
+        return this->esteNonstop;
+    }
+
+    int getCUI()
+    {
+        return this->CUI;
+    }
+
+    char* getNumeProprietar()
+    {
+        return this->numeProprietar;
+    }
+
+    int getNrProduse()
+    {
+        return this->nrProduse;
+    }
+
+    float* getPreturiProduse()
+    {
+        return this->preturiProduse;
+    }
+
+    string* getDenumiriProduse()
+    {
+        return this->denumiriProduse;
+    }
+
+    //setters
+    void setDenumireMagazin(string denumireMagazinNoua)
+    {
+        if (denumireMagazinNoua.length() >= 2)
+        {
+            this->denumireMagazin = denumireMagazinNoua;
+        }
+        else
+        {
+            this->denumireMagazin = "EROARE!";
+        }
+    }
+
+    void setNrAngajati(int nrAngajatNou)
+    {
+        this->nrAngajati = nrAngajatNou;
+    }
+
+    void setSuprafataMagazinMP(float suprafataMagazinMPNoua)
+    {
+        this->suprafataMagazinMP = suprafataMagazinMPNoua;
+    }
+
+    void setEsteNonstop(bool esteNonstopN)
+    {
+        this->esteNonstop = esteNonstopN;
+    }
+
+    //SETTERII PENTRU POINTERI presupun dezalocare de memorie (vechea valoare trebuie stearsa cu DELETE) + realocare de memorie + initializarea cu noua valoare primita ca parametru
+
+    void setNumeProprietar(const char* numeProprietar)
+    {
+            if (numeProprietar == nullptr || numeProprietar == "")
+                throw exception("invalid argument");
+            delete[] this->numeProprietar;
+            this->numeProprietar = new char[strlen(numeProprietar) + 1];
+            strcpy_s(this->numeProprietar, strlen(numeProprietar) + 1, numeProprietar);
+
+    }
+
+    //Pt. toti vectorii care vin la pachet cu un numarator, nu am voie sa fac setter separat pentru numarator si setter separat pentru vector (se modifica concomitent, nu individual)
+
+    void setProduse(int nrProduseNou, float* preturiNoiProduse, string* denumiriNoiProduse)
+    {
+        // Free old memory if exists
+        if (this->preturiProduse != nullptr) {
+            delete[] this->preturiProduse;
+        }
+        if (this->denumiriProduse != nullptr) {
+            delete[] this->denumiriProduse;
+        }
+
+        // Update number of products
+        this->nrProduse = nrProduseNou;
+
+        if (this->nrProduse > 0 && preturiNoiProduse != nullptr && denumiriNoiProduse != nullptr) {
+            this->preturiProduse = new float[this->nrProduse];
+            this->denumiriProduse = new string[this->nrProduse];
+
+            for (int i = 0; i < this->nrProduse; i++) {
+                this->preturiProduse[i] = preturiNoiProduse[i];
+                this->denumiriProduse[i] = denumiriNoiProduse[i];
+            }
+        }
+        else {
+            // If no products or input pointers are null, set to nullptr
+            this->preturiProduse = nullptr;
+            this->denumiriProduse = nullptr;
+        }
+    }
+
+    ~Magazin()
+    {
+        //daca in clasa nu avem pointeri, desctructorul nu o sa contina deloc instructiuni (va fi gol, dar tot trebuie sa existe in continuare)
+
+        if (this->numeProprietar != NULL)
+        {
+            delete[] this->numeProprietar;
+        }
+        if (this->preturiProduse != NULL)
+        {
+            delete[] this->preturiProduse;
+        }
+        if (this->denumiriProduse != NULL)
+        {
+            delete[] this->denumiriProduse;
+        }
+
+        cout << "S-a apelat destructorul!" << endl;
+    }
+    Magazin(const Magazin& obj) : CUI(obj.CUI)
+    {
+        this->denumireMagazin = obj.denumireMagazin;
+        this->nrAngajati = obj.nrAngajati;
+        this->suprafataMagazinMP = obj.suprafataMagazinMP;
+        this->esteNonstop = obj.esteNonstop;
+
+        // Safe copy for numeProprietar
+        if (obj.numeProprietar != nullptr) {
+            this->numeProprietar = new char[strlen(obj.numeProprietar) + 1];
+            strcpy(this->numeProprietar, obj.numeProprietar);
+        }
+        else {
+            this->numeProprietar = nullptr;
+        }
+
+        // Safe copy for products
+        this->nrProduse = obj.nrProduse;
+        if (this->nrProduse > 0 && obj.preturiProduse != nullptr && obj.denumiriProduse != nullptr) {
+            this->preturiProduse = new float[this->nrProduse];
+            this->denumiriProduse = new string[this->nrProduse];
+            for (int i = 0; i < this->nrProduse; ++i) {
+                this->preturiProduse[i] = obj.preturiProduse[i];
+                this->denumiriProduse[i] = obj.denumiriProduse[i];
+            }
+        }
+        else {
+            this->preturiProduse = nullptr;
+            this->denumiriProduse = nullptr;
+        }
+    }
+    Magazin& operator=(const Magazin& obj)
+    {
+        if (this != &obj)
+        {
+            if (this->numeProprietar != NULL)
+            {
+                delete[] this->numeProprietar;
+            }
+            if (this->preturiProduse != NULL)
+            {
+                delete[] this->preturiProduse;
+            }
+            if (this->denumiriProduse != NULL)
+            {
+                delete[] this->denumiriProduse;
+            }
+
+            this->denumireMagazin = obj.denumireMagazin;
+            this->nrAngajati = obj.nrAngajati;
+            this->suprafataMagazinMP = obj.suprafataMagazinMP;
+            this->esteNonstop = obj.esteNonstop;
+
+            //1.Alocarea de memorie
+            //Functia STRLEN NUMARA cate litere sunt in cuvantul pe care urmeaza sa il punem in char*, iar la final adaugam +1 pentru caracterul \0 (caracterul terminator pus automat de catre compilator la finalul oricarui char*)
+
+            this->numeProprietar = new char[strlen(obj.numeProprietar) + 1];
+
+            //2. Initializarea - functia STRCPY primeste 2 parametri - destinatia + sursa
+
+            strcpy(this->numeProprietar, obj.numeProprietar);
+
+            this->nrProduse = obj.nrProduse;
+
+            //1.Alocarea de memorie - se face cu operatorul NEW, urmat de tipul vectorului, iar intre parantezele patrate trebuie sa specificam nr. de elemente pentru care compilatorul trebuie sa aloce memorie (numaratorul vectorului)
+            this->preturiProduse = new float[this->nrProduse];
+            this->denumiriProduse = new string[this->nrProduse];
+
+            //2. Initializare
+            for (int i = 0; i < this->nrProduse; i++)
+            {
+                this->preturiProduse[i] = obj.preturiProduse[i];
+                this->denumiriProduse[i] = obj.denumiriProduse[i];
+            }
+        }
+        return*this;
+    }
+
+
+    float pretMinim()
+    {
+        float pretMin;
+        pretMin = this->preturiProduse[0];
+
+        for (int i = 1; i < this->nrProduse; i++)
+        {
+            if (this->preturiProduse[i] < pretMin)
+            {
+                pretMin = this->preturiProduse[i];
+            }
+        }
+
+        return pretMin;
+    }
+
+    //MIN PRET
+    float sumaTotalaPreturi()
+    {
+        float suma = 0;
+        for (int i = 0; i < this->nrProduse; i++)
+        {
+            suma = suma + this->preturiProduse[i];
+        }
+
+        return suma;
+    }
+
+    //APLICARE DISCOUNT - reducere la alegere pentru un singur produs din Magazin la alegere
+    void aplicareDiscount(float reducere, int pozitieProdusRedus)
+    {
+        if (pozitieProdusRedus >= 0 && pozitieProdusRedus < this->nrProduse)
+        {
+            this->preturiProduse[pozitieProdusRedus] = this->preturiProduse[pozitieProdusRedus] - this->preturiProduse[pozitieProdusRedus] * reducere;
+        }
+        else
+        {
+            cout << "Pozitie din vector inexistenta!";
+        }
+    }
+
+    //METODA DE ADAUGARE ELEMENT IN VECTOR - sa se adauge un produs nou in stocul magazinului
+    void adaugaProdusNou(float pretProdusNou, string denumireProdusNou)
+    {
+        Magazin copie(*this);
+
+        if (this->preturiProduse != NULL)
+        {
+            delete[] this->preturiProduse;
+        }
+        if (this->denumiriProduse != NULL)
+        {
+            delete[] this->denumiriProduse;
+        }
+
+        this->nrProduse++;
+        this->preturiProduse = new float[this->nrProduse];
+        this->denumiriProduse = new string[this->nrProduse];
+
+        for (int i = 0; i < copie.nrProduse; i++)
+        {
+            this->preturiProduse[i] = copie.preturiProduse[i];
+            this->denumiriProduse[i] = copie.denumiriProduse[i];
+        }
+
+        this->preturiProduse[this->nrProduse - 1] = pretProdusNou;
+        this->denumiriProduse[this->nrProduse - 1] = denumireProdusNou;
+    }
+
+    //Operatorul <=
+    bool operator<=(const Magazin& obj)
+    {
+        if (this->suprafataMagazinMP >= obj.suprafataMagazinMP)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    //Operatorul << de afisare pe consola a unui obiect
+    friend ostream& operator<<(ostream& o, const Magazin& obj)
+    {
+        o << "Denumire magazin:" << obj.denumireMagazin << endl;
+        o << "Este non-stop?" << obj.esteNonstop << endl;
+        o << "Nr angajati:" << obj.nrAngajati << endl;
+        o << "Suprafata:" << obj.suprafataMagazinMP << endl;
+        if (obj.numeProprietar != nullptr)
+            o << "Nume proprietar:" << obj.numeProprietar << endl;
+        o << "Nr produse:" << obj.nrProduse << endl;
+        cout << "Produse:" << endl;
+
+        for (int i = 0; i < obj.nrProduse; i++)
+        {
+            o << obj.preturiProduse[i] << endl;
+            o << obj.denumiriProduse[i] << endl;
+        }
+
+        o << obj.CUI << endl << endl;
+
+        return o;
+    }
+
+    //Operatorul >> de citire de la tatatura a unui obiect intreg
+    friend istream& operator>>(istream& i, Magazin& obj)
+    {
+        delete[] obj.numeProprietar;
+        delete[] obj.preturiProduse;
+        delete[] obj.denumiriProduse;
+
+        cout << "Introduceti denumire magazin:";
+        i >> obj.denumireMagazin;
+
+        cout << "Introduceti 1 daca magazinul este non-stop, introduceti 0 daca magazinul nu este non-stop:";
+        i >> obj.esteNonstop;
+        cout << "Introduceti nr de angajati:";
+        i >> obj.nrAngajati;
+        cout << "Introduceti suprafata:";
+        i >> obj.suprafataMagazinMP;
+
+        cout << "Introduceti numele proprietarului:";
+        char aux[100];
+        i >> aux;
+        obj.numeProprietar = new char[strlen(aux) + 1];
+        strcpy(obj.numeProprietar, aux);
+
+        cout << "Introduceti nr de produse:";
+        i >> obj.nrProduse;
+
+        obj.preturiProduse = new float[obj.nrProduse];
+        obj.denumiriProduse = new string[obj.nrProduse];
+        cout << "Introduceti preturile si denumirile produselor:";
+        for (int j = 0; j < obj.nrProduse; j++)
+        {
+            cout << "Pret:";
+            i >> obj.preturiProduse[j];
+
+            cout << "Denumire:";
+            i >> obj.denumiriProduse[j];
+        }
+        return i;
+    }
+
+    //Operatorul de indexare []
+    //este folosit mereu pe vectori, pt. a returna un singur element din vector in functie de pozitia lui din vector
+
+    string operator[](int pozitieDorita)
+    {
+        if (pozitieDorita >= 0 && pozitieDorita < this->nrProduse)
+        {
+            return this->denumiriProduse[pozitieDorita];
+        }
+        else
+        {
+            return "Pozitie eronata!";
+        }
+    }
+
+    //Operatorul functie() - singurul operator care are numar variabil de parametrii (0+)
+    //sa se calculeze cate produse din magazin sunt mai scumpe de un anumit prag
+
+    int operator()(float prag)
+    {
+        int contor = 0;
+        for (int i = 0; i < this->nrProduse; i++)
+        {
+            if (this->preturiProduse[i] > prag)
+            {
+                contor++;
+            }
+        }
+        return contor;
+    }
+
+    //Operatorul logic de negatie - bool, ca un intrerupator
+    friend void operator!(Magazin& obj)
+    {
+        if (obj.esteNonstop == 1)
+        {
+            obj.esteNonstop = 0;
+        }
+        else
+        {
+            obj.esteNonstop = 1;
+        }
+    }
+
+    //Operatorul de autoincrementare ++
+    Magazin& operator++() //PREincrementare
+    {
+        this->nrAngajati++;
+        return*this;
+    }
+
+    Magazin operator++(int) //POSTincrementare
+    {
+        Magazin copie = *this;
+        this->nrAngajati++;
+        return copie;
+    }
+
+    //Operatorul de cast la float - sa se calculeze valoarea totala a TVA-ului pt. toate produsele din magazin
+    operator float()
+    {
+        float TVA = 0.19;
+        float sumaTotalaTVA = 0;
+        for (int i = 0; i < this->nrProduse; i++)
+        {
+            sumaTotalaTVA = sumaTotalaTVA + TVA * this->preturiProduse[i];
+        }
+
+        return sumaTotalaTVA;
+    }
+
+    //Operatorul de cast la string - sa se determine care este denumirea produsului cel mai scump
+
+    operator string()
+    {
+        float pretMax;
+        pretMax = this->preturiProduse[0];
+        int contor = 0;
+
+        for (int i = 0; i < this->nrProduse; i++)
+        {
+            if (this->preturiProduse[i] > pretMax)
+            {
+                pretMax = this->preturiProduse[i];
+                contor = i;
+            }
+        }
+
+        return this->denumiriProduse[contor];
+    }
+    // Cast to int: returns 
+    explicit operator int()const  {
+        return nrAngajati;
+    }
+    bool comparaPrimaLitera(string* cuvinte, int nrCuvinte) {
+        bool existaEgalitati = false;
+
+        for (int i = 0; i < nrCuvinte - 1; i++) {
+            for (int j = i + 1; j < nrCuvinte; j++) {
+                if (cuvinte[i][0] == cuvinte[j][0]) {
+                    cout << "Cuvintele \"" << cuvinte[i]
+                        << "\" si \"" << cuvinte[j]
+                        << "\" incep cu aceeasi litera: "
+                        << cuvinte[i][0] << endl;
+                    existaEgalitati = true;
+                }
+                
+            }
+        }
+
+        return existaEgalitati;
+    }
+    // Operator *
+    void operator*(float coeficient) {
+        for (int i = 0; i < this->nrProduse; i++) {
+            this->preturiProduse[i] *= coeficient;
+        }
+    }
+
+    // Operator <
+    bool operator<(const Magazin& other) {
+        return this->nrAngajati < other.nrAngajati;
+    }
+    friend Magazin operator+(int value, const Magazin& obj);
+    // Operator +
+    Magazin operator+(const Magazin& other) {
+        Magazin rezultat(*this);
+        rezultat.nrAngajati += other.nrAngajati;
+
+        int totalProduse = this->nrProduse + other.nrProduse;
+        float* preturiNoi = new float[totalProduse];
+        string* denumiriNoi = new string[totalProduse];
+
+        for (int i = 0; i < this->nrProduse; i++) {
+            preturiNoi[i] = this->preturiProduse[i];
+            denumiriNoi[i] = this->denumiriProduse[i];
+        }
+
+        for (int i = 0; i < other.nrProduse; i++) {
+            preturiNoi[i + this->nrProduse] = other.preturiProduse[i];
+            denumiriNoi[i + this->nrProduse] = other.denumiriProduse[i];
+        }
+
+        rezultat.setProduse(totalProduse, preturiNoi, denumiriNoi);
+
+        delete[] preturiNoi;
+        delete[] denumiriNoi;
+
+        return rezultat;
+    }
+
+    // Operator -
+    Magazin operator-(int scadeAngajati) {
+        Magazin copie(*this);
+        copie.nrAngajati -= scadeAngajati;
+        if (copie.nrAngajati < 0) copie.nrAngajati = 0;
+        return copie;
+    }
+
+    // Operator ==
+    bool operator==(const Magazin& other) {
+        return this->CUI == other.CUI && this->denumireMagazin == other.denumireMagazin;
+    }
+
+   /* Magazin operator+(int value) const {
+        Magazin temp = *this;
+        temp.nrAngajati += value;
+        return temp;
+    }*/
+};
+
+Magazin operator+(int value, const Magazin& obj) {
+    Magazin temp = obj;
+    temp.nrAngajati += value;
+    return temp;
+} 
+int Magazin::clasaCAENPrincipala = 1234;
+int main() {
+    // 1. Constructor default
+    Magazin m1;
+    cout << "Magazinul m1:\n" << m1;
+
+    // 2. Constructor cu parametri
+    float preturi1[] = { 10.5, 20.3, 15.0 };
+    string denumiri1[] = { "Lapte", "Paine", "Oua" };
+   
+    Magazin m2("Mega Image", 10, 150.0f, true, 123, "Popescu", 3, preturi1, denumiri1);
+    cout << "\nMagazinul m2:\n" << m2;
+    for (int i = 0; i < 3; i++) {
+        cout << m2.getDenumiriProduse()[i]<<" ";
+    }
+    // 3. Copy constructor
+    Magazin m3 = m2;
+    cout << "\nMagazinul m3 (copie din m2):\n" << m3;
+    cout << m3.getNumeProprietar()<<endl;
+    m3.setNumeProprietar("m");
+    cout << m3.getPreturiProduse()[1];
+    
+    
+   
+    // 4. Operator =
+    m1 = m2;
+    cout << "\nDupa m1 = m2:\n" << m1;
+
+    // 5. Getter & setter
+    m1.setNrAngajati(20);
+    cout << "\nNr angajati m1 (dupa set): " << m1.getNrAngajati() << endl;
+
+    // 6. Operator []
+    cout << "\nAl doilea produs: " << m1[1] << endl;
+
+    // 7. Operator ()
+    cout << "\nNr produse mai scumpe de 15 lei: " << m1(15) << endl;
+
+    // 8. Operator !
+    !m1;
+    cout << "\nEste nonstop dupa negare (!): " << m1.getesteNonstop() << endl;
+
+    // 9. Operator ++
+    ++m1;
+    m1++;
+    cout << "\nNr angajati dupa doua incrementari: " << m1.getNrAngajati() << endl;
+
+    // 10. Operator cast float
+    float tva = (float)m1;
+    cout << "\nTVA total: " << tva << endl;
+
+    // 11. Operator cast string
+    string produsScump = (string)m1;
+    cout << "\nCel mai scump produs: " << produsScump << endl;
+
+    // 12. Operator <=
+    cout << "\nm1 <= m2? " << ((m1 <= m2) ? "DA" : "NU") << endl;
+
+    // 13. Operator *
+    m1 * 2.0f;
+    cout << "\nDublare preturi in m1:\n" << m1;
+
+    // 14. Operator <
+    cout << "\nm1 < m2 dupa nr angajati? " << ((m1 < m2) ? "DA" : "NU") << endl;
+
+    // 15. Operator +
+    Magazin m4=m1+m2;
+    cout << "\nMagazin m4 (rezultat m1 + m2):\n" << m4;
+
+    m2 =5+m2;
+    cout << "\nMagazin m4 (rezultat m1 + m2):\n" << m2;
+    // 16. Operator -
+    Magazin m5 = m4 - 5;
+    cout << "\nMagazin m5 (m4 - 5 angajati):\n" << m5;
+
+    // 17. Operator ==
+    cout << "\nm1 == m2? " << ((m1 == m2) ? "DA" : "NU") << endl;
+
+    //pt cast
+    int nrTest = (int)m2; cout << "explicti" << nrTest;
+
+    // 18. Test comparaPrimaLitera
+    string listaCuvinte[] = { "Ana", "Maria", "Andrei", "Ion", "Amalia" };
+    bool areEgale = m1.comparaPrimaLitera(listaCuvinte, 5);
+    if (!areEgale) {
+        cout << "Nu exista cuvinte care incep cu aceeasi litera." << endl;
+    }
+
+    // 19. Test metoda pretMinim
+    cout << "\nPretul minim din m2: " << m2.pretMinim() << " lei\n";
+
+    // 20. Test metoda sumaTotalaPreturi
+    cout << "Suma totala a preturilor din m2: " << m2.sumaTotalaPreturi() << " lei\n";
+
+    // 21. Test aplicareDiscount
+    m2.aplicareDiscount(0.2f, 1);  // 20% reducere la produsul de la pozitia 1
+    cout << "\nDupa reducerea de 20% la produsul 2:\n" << m2;
+
+    // 22. Test adaugaProdusNou
+    m2.adaugaProdusNou(7.5f, "Zahar");
+    cout << "\nDupa adaugarea produsului 'Zahar' in m2:\n" << m2;
+
+    return 0;
+}
